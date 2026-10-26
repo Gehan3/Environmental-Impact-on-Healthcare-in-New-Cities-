@@ -10,25 +10,16 @@ A smart-city digital twin framework designed for the New Administrative Capital 
 Environmental-Impact-on-Healthcare-in-New-Cities-/
 │
 ├── Data/
-│   ├── Raw data/                 # Raw monthly tabular datasets
-│   │   ├── district_population_profile.csv
-│   │   ├── environment_event_calendar.csv
-│   │   ├── healthcare_facilities.csv
-│   │   ├── p2_solid_waste_monthly.csv
-│   │   ├── p3_air_quality_health_monthly.csv
-│   │   ├── p4_service_requests_monthly.csv
-│   │   ├── population_monthly_clean.csv
-│   │   ├── pw_water_pollution_monthly.csv
-│   │   └── weather_monthly.csv
-│   │
-│   └── preprocessed data/        # Cleaned and linked output panel
-│       ├── master_panel_linked.csv
-│       └── event_district_month.csv
-│
-├── link_all_data.py              # Main data preprocessing, merging & simulation pipeline
-├── requirements.txt              # Project dependencies (pandas, numpy)
-├── .gitignore                    # Git ignore file (excludes venv/ and cache)
-└── README.md                     # Project documentation
+│   └── Processed/
+│       └── master_panel.csv      # Read-only ML/dashboard panel
+├── dashboard/                    # Config, loaders, simulation engine, and views
+├── experiments/                  # Preserved benchmark data, models, and reports
+├── tests/                         # Dashboard schema and simulation checks
+├── app.py                         # Streamlit dashboard entry point
+├── link_all_data.py               # Data linking and simulation pipeline
+├── run_experiments.py              # Reproducible triple-benchmark runner
+├── requirements.txt               # ML, Streamlit, and Plotly dependencies
+└── README.md                      # Project documentation
 
 ⚙️ Getting Started & Installation
 1. Clone the Repository
@@ -75,3 +66,22 @@ All experiments use the same February 2025–March 2026 training and April–Sep
 Experiment 1 forecasts raw `total_visits_demand`. Experiments 2 and 3 predict `1,000 * (pw_waterborne_visits_total + p3_respiratory_visits_total + p3_heat_related_visits) / residents_registered`, excluding `nonresp_visits`. Experiment 3 restricts predictors to lagged environmental, infrastructure, weather, and event features, without spatial/demographic shortcuts. The registered-resident denominator requires validation: several districts show large differences from `p3_population_exposed`. Outcomes are simulator-generated; metrics and importance are predictive associations, not causal estimates. See the [Phase 1 audit](experiments/DIAGNOSTIC_REPORT_AND_PLAN.md), [Experiment 2 comparison](experiments/COMPARATIVE_DECISION_REPORT.md), and [triple-benchmark synthesis](experiments/TRIPLE_BENCHMARK_SYNTHESIS_REPORT.md).
 
 For complete target lineage, exact feature lists/exclusion rationale, temporal CV and tuning settings, findings, limitations, and the artifact map, see [Experiment Methodology and Findings](experiments/EXPERIMENT_METHODOLOGY_AND_FINDINGS.md).
+
+## Smart-City Decision Dashboard
+
+The modular Streamlit dashboard provides three views: descriptive urban/environmental intelligence, transparent ML benchmark diagnostics, and a configurable budget-constrained what-if simulator. Its data, experiment, and policy configuration is centralized in `dashboard/config.py`. Source data and benchmark artifacts are loaded read-only.
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Run the headless dashboard schema, model-loading, simulation determinism, and artifact-integrity checks with:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+See [DASHBOARD_ARCHITECTURE.md](DASHBOARD_ARCHITECTURE.md) for the layer design, CPR calibration formula, scenario cost assumptions, extension points, and interpretation limits. Financial and intervention values in the simulation are illustrative assumptions—not local cost estimates or causal effect sizes.
+
+The pinned dashboard/runtime dependencies target Python 3.10–3.12. The saved scikit-learn estimators were originally serialized with scikit-learn 1.9.1; the cloud-compatible pin is 1.7.2. Headless validation loads each saved model and verifies 90-row holdout inference under the pinned runtime. Re-serialize artifacts with the deployed runtime during a future model release to remove scikit-learn cross-version persistence warnings.
