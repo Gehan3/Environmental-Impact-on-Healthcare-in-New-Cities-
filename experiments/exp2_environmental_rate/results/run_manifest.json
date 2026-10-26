@@ -1,0 +1,58 @@
+{
+  "best_parameters": {
+    "lightgbm": {
+      "model__max_depth": 2,
+      "model__min_child_samples": 10
+    },
+    "ridge": {
+      "model__alpha": 1.0
+    }
+  },
+  "cpu_threads": 8,
+  "districts": 15,
+  "input": "Data/Processed/master_panel.csv",
+  "input_sha256": "cff9180167a4f1981dae4afe0fecfa19e94c17dab99d3277ac6a8f303f910a43",
+  "lightgbm": "4.7.0",
+  "lightgbm_device": "cpu",
+  "months": [
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09"
+  ],
+  "numpy": "2.5.4",
+  "pandas": "3.1.0",
+  "python": "3.12.3",
+  "scikit_learn": "1.9.1",
+  "seed": 42,
+  "target": "environmental_visits_per_1000_residents",
+  "target_formula": "1000 * (pw_waterborne_visits_total + p3_respiratory_visits_total + p3_heat_related_visits) / residents_registered",
+  "test_months": [
+    "2026-04",
+    "2026-09"
+  ],
+  "test_rows": 90,
+  "training_months": [
+    "2025-02",
+    "2026-03"
+  ],
+  "training_rows": 210,
+  "winning_model_by_cv": "LightGBM (tuned)"
+}
